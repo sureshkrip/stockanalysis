@@ -1,11 +1,10 @@
 # Data Center Value Chain — Seed Ticker Universe
 
-Seed list for `sectors.yaml`. ~55 tickers across 9 sub-sectors plus an emerging watchlist.
+Seed list for `sectors.yaml`. ~56 tickers across 9 sub-sectors plus an emerging watchlist.
 
-> **Unverified.** Compiled from general sector knowledge as of early 2026, not checked against
-> live market data. Verify against SEC EDGAR and the reference ETF holdings before relying on it.
-> Known open questions: whether Cerebras has IPO'd and under what ticker; whether all emerging /
-> neocloud names below are still trading as listed.
+> **Verified 2026-07-19.** Cross-checked all previously-uncertain names via web search.
+> Cerebras IPO'd 2026-05-14 under ticker **CBRS** (Nasdaq) — added below. NBIS, CRWV, APLD,
+> IREN, SMCI, and GDS are all confirmed still listed and actively trading. No removals needed.
 
 **Reference ETFs for cross-checking the universe:** DTCR, AIPO, SRVR, GRID
 
@@ -20,6 +19,7 @@ Seed list for `sectors.yaml`. ~55 tickers across 9 sub-sectors plus an emerging 
 | MRVL | Marvell Technology |
 | ARM | Arm Holdings |
 | INTC | Intel |
+| CBRS | Cerebras Systems (IPO'd 2026-05-14) |
 
 ## Semi equipment / foundries
 | Ticker | Company |
