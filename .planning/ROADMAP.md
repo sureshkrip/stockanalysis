@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Running the refresh script against the full ~55-ticker universe completes end-to-end even when individual tickers fail, logging each failure rather than halting the overall run
   4. The backend, frontend scaffold, and database run together as a docker-compose stack that deploys to the owner's Coolify VPS via git-push-to-deploy
 
-**Plans**: 3/5 plans executed
+**Plans**: 4/5 plans executed
 
 Plans:
 **Wave 1**
@@ -48,7 +48,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-04-PLAN.md — Derived market cap, point-in-time persistence, and full fundamentals history in the API
+- [x] 01-04-PLAN.md — Derived market cap, point-in-time persistence, and full fundamentals history in the API
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
@@ -125,7 +125,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation — Taxonomy, Ingestion & Deployment | 3/5 | In Progress|  |
+| 1. Data Foundation — Taxonomy, Ingestion & Deployment | 4/5 | In Progress|  |
 | 2. Company Browser — Sortable Table with Trust Indicators | 0/TBD | Not started | - |
 | 3. Company Detail & Sector Heatmap | 0/TBD | Not started | - |
 | 4. Relative-Value Analysis & Screens | 0/TBD | Not started | - |
