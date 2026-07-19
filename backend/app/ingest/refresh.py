@@ -27,6 +27,9 @@ from pathlib import Path
 
 from sqlalchemy.orm import Session
 
+from app.ingest.cik_resolver import resolve_cik
+from app.ingest.edgar_client import get_companyfacts
+from app.ingest.fundamentals import extract_fundamentals, write_fundamentals
 from app.ingest.prices import fetch_price, write_price
 from app.ingest.taxonomy import load_taxonomy, sync_taxonomy
 from app.models import RefreshLog
@@ -114,6 +117,12 @@ def run_refresh(session: Session, taxonomy_path: str | Path) -> RefreshResult:
     failures: list[TickerFailure] = []
 
     for ticker in tickers:
+        # Price and fundamentals are two independent stages inside the
+        # same per-ticker pass (never a second loop over tickers, which
+        # would double wall-clock time and split the failure log across
+        # two conceptual runs). Neither stage's try/except may swallow
+        # the other's outcome: a flaky price provider must not prevent a
+        # fundamentals attempt, and vice versa.
         try:
             row = fetch_price(ticker)
             write_price(session, row)
@@ -121,6 +130,27 @@ def run_refresh(session: Session, taxonomy_path: str | Path) -> RefreshResult:
         except Exception as exc:  # noqa: BLE001 - per-ticker isolation is intentional
             session.rollback()
             record_failure(failures, ticker, "price", exc)
+
+        try:
+            cik = resolve_cik(session, ticker)
+            # Commit immediately so a newly-resolved CIK is durably
+            # cached even if the fundamentals fetch below fails — the
+            # cache row must not be rolled back by an unrelated
+            # downstream failure.
+            session.commit()
+        except Exception as exc:  # noqa: BLE001 - per-ticker isolation is intentional
+            session.rollback()
+            record_failure(failures, ticker, "cik", exc)
+            continue
+
+        try:
+            facts = get_companyfacts(cik)
+            fact_rows = extract_fundamentals(facts["facts"], session, ticker)
+            write_fundamentals(session, ticker, fact_rows)
+            session.commit()
+        except Exception as exc:  # noqa: BLE001 - per-ticker isolation is intentional
+            session.rollback()
+            record_failure(failures, ticker, "fundamentals", exc)
             continue
 
     persist_refresh_log(session, run_id, started_at, failures, len(tickers))

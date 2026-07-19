@@ -309,3 +309,60 @@ def _years_ago(today: date, years: int) -> date:
     except ValueError:
         # today is Feb 29 and (today.year - years) is not a leap year
         return today.replace(month=2, day=28, year=today.year - years)
+
+
+def write_fundamentals(session: Session, ticker: str, rows: list[FactRow]) -> None:
+    """Persist FactRows with insert-or-ignore semantics on the four-column
+    `uq_fundamental_period_filing` key (ticker, fiscal_year,
+    fiscal_period, accession_number) — Pattern 4 / D-09.
+
+    Deliberately insert-or-ignore, never upsert-by-ticker and never
+    on-conflict-update. RESEARCH.md Pitfall 5: "just update the row for
+    this ticker" is the natural instinct for a refresh script and is
+    correct for prices, but wrong here — it replaces prior periods on
+    every run and eventually leaves a single row per company, silently
+    violating D-09's full-history requirement. When SEC later posts a
+    restatement it arrives under a new accession_number, so it inserts
+    as an additional row and both the original and the restated figures
+    survive; on-conflict-update would destroy the original.
+
+    The dialect-appropriate on-conflict construct is selected from the
+    bound engine so the same code path works unmodified on both SQLite
+    and Postgres (STORE-01's DATABASE_URL-swap premise).
+    """
+    from app.models import Fundamental
+
+    if not rows:
+        return
+
+    dialect_name = session.get_bind().dialect.name
+    if dialect_name == "postgresql":
+        from sqlalchemy.dialects.postgresql import insert as dialect_insert
+    else:
+        from sqlalchemy.dialects.sqlite import insert as dialect_insert
+
+    values = [
+        {
+            "ticker": ticker,
+            "fiscal_year": row.fiscal_year,
+            "fiscal_period": row.fiscal_period,
+            "form": row.form,
+            "accession_number": row.accession_number,
+            "filed_date": row.filed_date,
+            "period_end": row.period_end,
+            "revenue": row.revenue,
+            "net_income": row.net_income,
+            "market_cap": row.market_cap,
+            "taxonomy": row.taxonomy,
+        }
+        for row in rows
+    ]
+
+    stmt = dialect_insert(Fundamental).values(values)
+    # index_elements (not a bare constraint name) is the one conflict-target
+    # spelling both the sqlite and postgresql dialects accept identically —
+    # sqlite's on_conflict_do_nothing() has no `constraint=` kwarg at all.
+    stmt = stmt.on_conflict_do_nothing(
+        index_elements=["ticker", "fiscal_year", "fiscal_period", "accession_number"]
+    )
+    session.execute(stmt)
