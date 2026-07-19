@@ -17,6 +17,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date
+from decimal import Decimal
+
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 CONCEPT_MAP: dict[str, dict[str, list[str]]] = {
     "us-gaap": {
@@ -61,6 +65,7 @@ class FactRow:
     revenue: float | None
     net_income: float | None
     shares_outstanding: float | None
+    market_cap: Decimal | None
     taxonomy: str
 
 
@@ -111,6 +116,83 @@ def _extract_shares(facts: dict, taxonomy: str) -> list[dict]:
     return extract_concept(facts, taxonomy, "shares_outstanding", unit="shares")
 
 
+def find_nearest_close(session: Session, ticker: str, as_of: date) -> Decimal | None:
+    """Return the ingested Price closest in calendar days to `as_of` for
+    `ticker`, or None when the ticker has no price rows at all.
+
+    Pushes the ordering into two bounded queries — the nearest row on-or-
+    after `as_of` and the nearest row strictly before it — rather than
+    loading the ticker's full price history into Python and scanning it.
+    At most two rows ever cross the wire; the final nearest-of-two
+    comparison is a trivial Python min() over that pair.
+    """
+    from app.models import Price
+
+    on_or_after = session.scalars(
+        select(Price)
+        .where(Price.ticker == ticker, Price.as_of >= as_of)
+        .order_by(Price.as_of.asc())
+        .limit(1)
+    ).one_or_none()
+
+    before = session.scalars(
+        select(Price)
+        .where(Price.ticker == ticker, Price.as_of < as_of)
+        .order_by(Price.as_of.desc())
+        .limit(1)
+    ).one_or_none()
+
+    candidates = [p for p in (on_or_after, before) if p is not None]
+    if not candidates:
+        return None
+
+    nearest = min(candidates, key=lambda p: abs((p.as_of - as_of).days))
+    return Decimal(nearest.close)
+
+
+def compute_market_cap(shares_entry: dict, session: Session, ticker: str) -> Decimal | None:
+    """shares_outstanding x closing_price_nearest(as_of_date) — Pattern 3.
+
+    There is no MarketCap XBRL concept in either taxonomy (verified live
+    against NVDA's companyfacts). `shares_entry["end"]` is the as-of date
+    the shares figure was reported for; the nearest ingested close to that
+    date stands in for "the market cap as of that filing".
+
+    Returns None — never 0 — when no close is available for `ticker`. A
+    null market cap is an honest "we could not compute this"; a zero
+    would make the company look free in every downstream relative-value
+    screen, which is a far worse failure than a visible gap.
+
+    Multiplication is performed entirely in Decimal (never float): share
+    counts reach the tens of billions (NVDA's verified entry is
+    24,300,000,000) and prices carry fractional cents, so a binary float
+    product would introduce drift in low-order digits of a figure later
+    phases rank companies against. No rounding is applied — the stored
+    value is the full-precision product.
+    """
+    as_of = date.fromisoformat(shares_entry["end"])
+    nearest_close = find_nearest_close(session, ticker, as_of)
+    if nearest_close is None:
+        return None
+
+    shares = Decimal(str(shares_entry["val"]))
+    return shares * nearest_close
+
+
+def _nearest_shares_entry(shares_entries: list[dict], period_end: date) -> dict | None:
+    """Fallback shares-entry lookup when a filing has no shares entry
+    sharing its own (fy, fp, accn) key: pick the raw shares entry whose
+    `end` is nearest the filing's period_end, across the ticker's full
+    shares-entry history.
+    """
+    if not shares_entries:
+        return None
+    return min(
+        shares_entries,
+        key=lambda entry: abs((date.fromisoformat(entry["end"]) - period_end).days),
+    )
+
+
 def _reduce_to_headline_per_filing(entries: list[dict]) -> dict[tuple, dict]:
     """Reduce a concept's raw entry list to one entry per (fy, fp, accn).
 
@@ -139,15 +221,28 @@ def _reduce_to_headline_per_filing(entries: list[dict]) -> dict[tuple, dict]:
     return reduced
 
 
-def extract_fundamentals(facts: dict, years: int = 5) -> list[FactRow]:
-    """Extract revenue, net income, and shares outstanding across the
-    trailing `years` of filing history, one FactRow per filing.
+def extract_fundamentals(
+    facts: dict, session: Session, ticker: str, years: int = 5
+) -> list[FactRow]:
+    """Extract revenue, net income, shares outstanding, and derived market
+    cap across the trailing `years` of filing history, one FactRow per
+    filing.
 
     Detects the taxonomy once, then extracts each concept and reduces it
     to one headline entry per (fiscal_year, fiscal_period, accession
     number) filing. Revenue and net income are per-concept lists that are
     NOT guaranteed to be the same length or order, so they are joined on
     that key rather than zipped positionally.
+
+    Market cap needs database access for the price lookup (Pattern 3),
+    so `session` is passed in rather than opened inside this module —
+    the caller owns transaction scope and this function stays testable
+    against an injected session. The shares entry is matched to each
+    filing by its own (fiscal_year, fiscal_period, accession_number) key
+    first; when no shares entry shares that exact filing key, the shares
+    entry nearest the filing's period_end is used instead so market cap
+    can still be derived for a filing whose shares figure was reported
+    under a different accession.
 
     The history cutoff is today minus `years` years; a filing's `end`
     (period_end) must be >= the cutoff to be included — the boundary is
@@ -162,7 +257,8 @@ def extract_fundamentals(facts: dict, years: int = 5) -> list[FactRow]:
     net_income_by_key = _reduce_to_headline_per_filing(
         extract_concept(facts, taxonomy, "net_income")
     )
-    shares_by_key = _reduce_to_headline_per_filing(_extract_shares(facts, taxonomy))
+    shares_entries = _extract_shares(facts, taxonomy)
+    shares_by_key = _reduce_to_headline_per_filing(shares_entries)
 
     cutoff = _years_ago(date.today(), years)
 
@@ -179,6 +275,11 @@ def extract_fundamentals(facts: dict, years: int = 5) -> list[FactRow]:
         if period_end < cutoff:
             continue
 
+        shares_entry = shares_by_key.get(key) or _nearest_shares_entry(shares_entries, period_end)
+        market_cap = (
+            compute_market_cap(shares_entry, session, ticker) if shares_entry is not None else None
+        )
+
         rows.append(
             FactRow(
                 fiscal_year=fiscal_year,
@@ -189,7 +290,8 @@ def extract_fundamentals(facts: dict, years: int = 5) -> list[FactRow]:
                 period_end=period_end,
                 revenue=revenue_by_key[key]["val"] if key in revenue_by_key else None,
                 net_income=net_income_by_key[key]["val"] if key in net_income_by_key else None,
-                shares_outstanding=shares_by_key[key]["val"] if key in shares_by_key else None,
+                shares_outstanding=shares_entry["val"] if shares_entry is not None else None,
+                market_cap=market_cap,
                 taxonomy=taxonomy,
             )
         )
