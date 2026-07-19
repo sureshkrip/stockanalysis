@@ -2,12 +2,23 @@
 # SQLite-first decision). Coolify auto-creates a shared network per compose
 # stack, so no explicit `networks:` block is declared.
 #
-# Backend's port is published here for local `docker compose up` smoke
-# testing/curl access (01-VALIDATION.md's automated checks assume
-# localhost:8000 is reachable). In Coolify, internet exposure is controlled
-# separately by assigning a domain to a service in the Coolify UI — publish
-# a port here does not itself create a public domain — so only `frontend`
-# should be given a domain when this stack is deployed (plan 05).
+# Production shape (plan 05): neither service publishes a host port in this
+# file. Coolify assigns the public domain and terminates TLS via its reverse
+# proxy on `frontend` only (Coolify Dashboard -> the stack -> frontend
+# service -> Domains); `backend` never gets a domain assigned and is
+# reachable only over the stack's internal Docker network at
+# http://backend:8000 — that's the practical access control for an API with
+# no application-level auth (see docs/deployment.md and the phase threat
+# model, T-01-20).
+#
+# Local development: with no `ports:` mapping, `docker compose up --build`
+# still brings both services up on the shared internal network, but they
+# are not reachable via `curl localhost:...` from the host. To smoke-test
+# the containers directly, use `docker compose exec backend curl -f
+# http://localhost:8000/health` / `docker compose exec frontend wget -qO-
+# http://localhost:3000`. For day-to-day development, running the backend
+# and frontend directly on the host (see README.md) is simpler than
+# rebuilding containers on every change.
 services:
   backend:
     build: ./backend
@@ -18,14 +29,10 @@ services:
       - type: bind
         source: ./data
         target: /data
-    ports:
-      - "8000:8000"
 
   frontend:
     build: ./frontend
     environment:
       - BACKEND_URL=http://backend:8000
-    ports:
-      - "3000:3000"
     depends_on:
       - backend
