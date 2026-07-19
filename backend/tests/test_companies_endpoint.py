@@ -18,8 +18,11 @@ def test_companies_returns_full_taxonomy(tmp_path, monkeypatch):
     monkeypatch.setenv("EDGAR_USER_AGENT", "DataCenterStocks sureshkrip@gmail.com")
 
     from app.config import get_settings
+    from app.db import get_engine, get_session_factory
 
     get_settings.cache_clear()
+    get_engine.cache_clear()
+    get_session_factory.cache_clear()
 
     from app.ingest.taxonomy import load_taxonomy, sync_taxonomy
     from app.main import app
@@ -48,3 +51,5 @@ def test_companies_returns_full_taxonomy(tmp_path, monkeypatch):
         assert taxonomy["sub_sector"]
 
     get_settings.cache_clear()
+    get_engine.cache_clear()
+    get_session_factory.cache_clear()
