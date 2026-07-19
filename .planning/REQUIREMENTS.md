@@ -14,7 +14,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Ingestion
 
 - [x] **INGEST-01**: System pulls daily close price and basic quote data for every ticker in the taxonomy config
-- [ ] **INGEST-02**: System pulls revenue, net income, and market cap for every ticker from SEC EDGAR's company facts API, going back 3-5 years of filings per company (not just the latest quarter — avoids a re-ingestion project when trend charts are added later)
+- [x] **INGEST-02**: System pulls revenue, net income, and market cap for every ticker from SEC EDGAR's company facts API, going back 3-5 years of filings per company (not just the latest quarter — avoids a re-ingestion project when trend charts are added later)
 
 ### Storage & Refresh
 
@@ -92,7 +92,7 @@ Explicitly excluded. Documented to prevent scope creep.
 |-------------|-------|--------|
 | TAXO-01 | Phase 1 | Complete |
 | INGEST-01 | Phase 1 | Complete |
-| INGEST-02 | Phase 1 | Pending |
+| INGEST-02 | Phase 1 | Complete |
 | STORE-01 | Phase 1 | Complete |
 | STORE-02 | Phase 1 | Complete |
 | DEPLOY-01 | Phase 1 | Complete |
