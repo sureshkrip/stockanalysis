@@ -31,7 +31,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **ANALYSIS-01**: System computes P/E, EV/EBITDA, revenue growth, and gross margin trend per company (via FinanceToolkit)
 - [ ] **ANALYSIS-02**: Owner can view a sub-sector peer-group comparison showing all companies in a sub-sector side by side with percentile rank within the group
-- [ ] **ANALYSIS-03**: Owner can run relative-value screens scoped to a single sub-sector (e.g., cheapest P/E, fastest revenue growth)
+- [ ] **ANALYSIS-03**: Owner can run relative-value screens scoped to a single sub-sector (e.g., cheapest P/E in memory, fastest growth in networking)
 - [ ] **ANALYSIS-04**: System computes a composite score (growth + valuation + momentum) per company, rank-based (percentile, not raw z-score) and scoped to its own peer group, with sub-scores visible — never a single opaque number
 
 ### Data Trust
@@ -88,33 +88,31 @@ Explicitly excluded. Documented to prevent scope creep.
 
 ## Traceability
 
-Populated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TAXO-01 | TBD | Pending |
-| INGEST-01 | TBD | Pending |
-| INGEST-02 | TBD | Pending |
-| STORE-01 | TBD | Pending |
-| STORE-02 | TBD | Pending |
-| BROWSE-01 | TBD | Pending |
-| BROWSE-02 | TBD | Pending |
-| BROWSE-03 | TBD | Pending |
-| ANALYSIS-01 | TBD | Pending |
-| ANALYSIS-02 | TBD | Pending |
-| ANALYSIS-03 | TBD | Pending |
-| ANALYSIS-04 | TBD | Pending |
-| TRUST-01 | TBD | Pending |
-| TRUST-02 | TBD | Pending |
-| CONV-01 | TBD | Pending |
-| CONV-02 | TBD | Pending |
-| DEPLOY-01 | TBD | Pending |
+| TAXO-01 | Phase 1 | Pending |
+| INGEST-01 | Phase 1 | Pending |
+| INGEST-02 | Phase 1 | Pending |
+| STORE-01 | Phase 1 | Pending |
+| STORE-02 | Phase 1 | Pending |
+| DEPLOY-01 | Phase 1 | Pending |
+| BROWSE-01 | Phase 2 | Pending |
+| TRUST-01 | Phase 2 | Pending |
+| TRUST-02 | Phase 2 | Pending |
+| BROWSE-02 | Phase 3 | Pending |
+| BROWSE-03 | Phase 3 | Pending |
+| ANALYSIS-01 | Phase 4 | Pending |
+| ANALYSIS-02 | Phase 4 | Pending |
+| ANALYSIS-03 | Phase 4 | Pending |
+| ANALYSIS-04 | Phase 4 | Pending |
+| CONV-01 | Phase 5 | Pending |
+| CONV-02 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 17 total
-- Mapped to phases: 0 (populated by roadmapper)
-- Unmapped: 17 ⚠️ (expected — roadmap not yet created)
+- Mapped to phases: 17 (100%)
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-07-19*
-*Last updated: 2026-07-19 after initial definition*
+*Last updated: 2026-07-19 after roadmap creation (5 phases, full v1 coverage)*
