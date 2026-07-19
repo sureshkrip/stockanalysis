@@ -1,0 +1,192 @@
+# Data Center Stocks — sub-sector taxonomy (TAXO-01)
+#
+# Owner-editable: add/remove/retag a ticker here and the next taxonomy sync
+# reflects the change with zero code edits. One primary sub_sector per ticker
+# (D-03) — no dual membership, no sub-sub-sector nesting.
+#
+# Source: data-center-value-chain-tickers.md, verified against live market
+# data 2026-07-19 (D-01). NOTE: the source list documents 54 unique tickers
+# (not the ~56 estimated pre-verification) — this file transcribes it as-is.
+
+companies:
+  # AI chips / accelerators
+  - ticker: NVDA
+    name: NVIDIA
+    sub_sector: ai_chips
+  - ticker: AMD
+    name: Advanced Micro Devices
+    sub_sector: ai_chips
+  - ticker: AVGO
+    name: Broadcom
+    sub_sector: ai_chips
+  - ticker: MRVL
+    name: Marvell Technology
+    sub_sector: ai_chips
+  - ticker: ARM
+    name: Arm Holdings
+    sub_sector: ai_chips
+  - ticker: INTC
+    name: Intel
+    sub_sector: ai_chips
+  - ticker: CBRS
+    name: Cerebras Systems
+    sub_sector: ai_chips
+
+  # Semi equipment / foundries
+  - ticker: TSM
+    name: Taiwan Semiconductor
+    sub_sector: semi_equipment
+  - ticker: ASML
+    name: ASML Holding
+    sub_sector: semi_equipment
+  - ticker: AMAT
+    name: Applied Materials
+    sub_sector: semi_equipment
+  - ticker: LRCX
+    name: Lam Research
+    sub_sector: semi_equipment
+  - ticker: KLAC
+    name: KLA Corporation
+    sub_sector: semi_equipment
+  - ticker: TER
+    name: Teradyne
+    sub_sector: semi_equipment
+
+  # Memory / storage
+  - ticker: MU
+    name: Micron Technology
+    sub_sector: memory_storage
+  - ticker: SNDK
+    name: SanDisk
+    sub_sector: memory_storage
+  - ticker: WDC
+    name: Western Digital
+    sub_sector: memory_storage
+  - ticker: STX
+    name: Seagate Technology
+    sub_sector: memory_storage
+
+  # Networking / interconnect
+  - ticker: ANET
+    name: Arista Networks
+    sub_sector: networking
+  - ticker: CSCO
+    name: Cisco Systems
+    sub_sector: networking
+  - ticker: CIEN
+    name: Ciena
+    sub_sector: networking
+  - ticker: LITE
+    name: Lumentum
+    sub_sector: networking
+  - ticker: COHR
+    name: Coherent
+    sub_sector: networking
+  - ticker: FN
+    name: Fabrinet
+    sub_sector: networking
+  - ticker: GLW
+    name: Corning
+    sub_sector: networking
+
+  # Power / electrical
+  - ticker: VRT
+    name: Vertiv
+    sub_sector: power_electrical
+  - ticker: ETN
+    name: Eaton
+    sub_sector: power_electrical
+  - ticker: EMR
+    name: Emerson Electric
+    sub_sector: power_electrical
+  - ticker: HUBB
+    name: Hubbell
+    sub_sector: power_electrical
+  - ticker: NVT
+    name: nVent Electric
+    sub_sector: power_electrical
+  - ticker: GEV
+    name: GE Vernova
+    sub_sector: power_electrical
+
+  # Cooling / thermal
+  - ticker: JCI
+    name: Johnson Controls
+    sub_sector: cooling_thermal
+  - ticker: CARR
+    name: Carrier Global
+    sub_sector: cooling_thermal
+  - ticker: AAON
+    name: AAON
+    sub_sector: cooling_thermal
+  - ticker: MOD
+    name: Modine Manufacturing
+    sub_sector: cooling_thermal
+
+  # DC REITs / colocation
+  - ticker: DLR
+    name: Digital Realty Trust
+    sub_sector: dc_reits
+  - ticker: EQIX
+    name: Equinix
+    sub_sector: dc_reits
+  - ticker: IRM
+    name: Iron Mountain
+    sub_sector: dc_reits
+
+  # Hyperscalers (demand side)
+  - ticker: MSFT
+    name: Microsoft
+    sub_sector: hyperscalers
+  - ticker: GOOGL
+    name: Alphabet
+    sub_sector: hyperscalers
+  - ticker: AMZN
+    name: Amazon
+    sub_sector: hyperscalers
+  - ticker: META
+    name: Meta Platforms
+    sub_sector: hyperscalers
+  - ticker: ORCL
+    name: Oracle
+    sub_sector: hyperscalers
+
+  # Construction / materials
+  - ticker: PWR
+    name: Quanta Services
+    sub_sector: construction_materials
+  - ticker: MTZ
+    name: MasTec
+    sub_sector: construction_materials
+  - ticker: EME
+    name: EMCOR Group
+    sub_sector: construction_materials
+  - ticker: VMC
+    name: Vulcan Materials
+    sub_sector: construction_materials
+  - ticker: MLM
+    name: Martin Marietta Materials
+    sub_sector: construction_materials
+  - ticker: NUE
+    name: Nucor
+    sub_sector: construction_materials
+
+  # Emerging / picks-and-shovels watchlist
+  - ticker: CRWV
+    name: CoreWeave
+    sub_sector: emerging_watchlist
+  - ticker: NBIS
+    name: Nebius Group
+    sub_sector: emerging_watchlist
+  - ticker: APLD
+    name: Applied Digital
+    sub_sector: emerging_watchlist
+  - ticker: IREN
+    name: IREN
+    sub_sector: emerging_watchlist
+  - ticker: SMCI
+    name: Super Micro Computer
+    sub_sector: emerging_watchlist
+  - ticker: GDS
+    name: GDS Holdings
+    sub_sector: emerging_watchlist
