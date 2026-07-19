@@ -2,9 +2,11 @@
 
 ## What This Is
 
-A personal research and tracking tool for the public-company "data center value chain" — the ~55 companies across chips, memory, networking, power, cooling, colocation REITs, hyperscalers, and construction/materials that make data centers happen. It pulls prices and fundamentals, groups everything by sub-sector, and runs relative-value screens so one company can be judged against its actual peers rather than against the whole market.
+A personal research and tracking tool for public-company sector "value chains" — starting with the ~55-company data center value chain (chips, memory, networking, power, cooling, colocation REITs, hyperscalers, construction/materials) and designed to eventually hold other themes side by side (e.g., quantum computing) as the owner spots new sectors worth watching. It pulls prices and fundamentals, groups everything by sub-sector, and runs relative-value screens so one company can be judged against its actual peers rather than against the whole market. A theme-level momentum rollup lets the owner gauge whether a candidate sector is heating up once they've added a small ticker list for it.
 
-Built for one user (the owner) for personal investing decisions and to build a deeper understanding of how this sector fits together.
+Built for one user (the owner) for personal investing decisions and to build a deeper understanding of how sectors like this fit together.
+
+**This milestone builds the data center value chain as the first, fully-realized theme.** Generalizing the taxonomy/analysis layer to hold multiple independent themes happens after data center is proven end-to-end — see Constraints and Key Decisions.
 
 ## Core Value
 
@@ -29,10 +31,13 @@ Seeing every company in the data center value chain grouped by sub-sector, with 
 - [ ] Run within-sub-sector relative-value screens (cheapest P/E in memory, fastest growth in networking, etc.)
 - [ ] Rank companies by a composite score (growth + valuation + momentum)
 - [ ] Deploy the stack to the owner's existing Coolify VPS via docker-compose
+- [ ] Generalize the taxonomy from a single value chain to multiple independent sector-themes tracked side by side (data center is the first; e.g., quantum computing as a future theme) — **sequenced after data center ships end-to-end, not built in Phases 0-3**
+- [ ] Theme-level momentum/return rollup — once a candidate theme has even a small ticker list, reuse the same rollup/heatmap machinery at the theme level so the owner can eyeball whether it's heating up — **same later phase as multi-theme generalization**
 
 ### Out of Scope
 
 - **Automated buy/sell signals or alerts** — this is decision-support only; screens are inputs the owner reviews manually, never actions the system takes
+- **Automated sector/theme discovery** (scanning news volume, IPO activity, FRED capex trends, search trends to surface candidate themes on its own) — the owner decides which sectors are worth watching and adds a candidate ticker list themselves; the tool's job is to show momentum for themes already added, not discover new ones
 - **Multi-user accounts / auth** — single personal user; auth only becomes relevant if the tool is ever shared
 - **Real-time or intraday quotes** — daily EOD data is sufficient for the research cadence this supports
 - **Backtesting engine** — scope creep past the tracking/screening goal; revisit only if the screens prove genuinely useful
@@ -49,9 +54,11 @@ The seed list was compiled from general sector knowledge as of early 2026 and ha
 
 **Data sourcing strategy.** Start entirely free: SEC EDGAR (fundamentals, official, unlimited under ~10 req/sec fair use), FRED (macro context), yfinance (prices — prototyping only; it's an unofficial Yahoo scraper that breaks without notice and is ToS-gray, so don't build production dependencies on it). Once the MVP proves useful, add Financial Modeling Prep's ~$22/mo Starter plan as the primary priced feed. SEC EDGAR stays the fundamentals source of record permanently — official and free.
 
-**Open source leverage.** OpenBB Platform (AGPL — fine for personal/internal use) as the data-access layer over 100+ providers; FinanceToolkit (MIT) for ratio/valuation math. The taxonomy, screening rules, and dashboard are hand-written — that's where the actual value is.
+**Open source leverage.** FinanceToolkit (MIT) for ratio/valuation math. Data access is hand-rolled (direct `yfinance` + a small SEC EDGAR `httpx` client) rather than via OpenBB — see Key Decisions for why. The taxonomy, screening rules, and dashboard are hand-written — that's where the actual value is.
 
 **Data quality caveat.** Free sources have gaps and errors. Anything informing a real investing decision gets cross-checked against SEC filings directly.
+
+**Multi-sector future.** The owner wants to eventually track other booming sectors (e.g., quantum computing) side by side with data center, and to gauge whether a candidate sector is heating up via a theme-level momentum rollup — not via automated discovery (see Out of Scope). This is real scope for the project, but sequenced deliberately: data center ships as one fully-working vertical first, proving the taxonomy/ingestion/screening pattern, before the config schema and analysis layer generalize to hold N themes.
 
 ## Constraints
 
@@ -74,7 +81,9 @@ The seed list was compiled from general sector knowledge as of early 2026 and ha
 | SEC EDGAR as fundamentals source of record | Official filings are ground truth; free sources drift and have gaps | — Pending |
 | Sub-sector taxonomy in config, not code | Sector churns constantly (IPOs, spinoffs, M&A) — editing YAML beats editing code monthly | — Pending |
 | Decision-support only, no automated signals | Personal investing tool where the owner's judgment is the point; auto-signals invite unearned trust | — Pending |
-| OpenBB (data access) + FinanceToolkit (ratios) | Don't rebuild 100+ provider integrations or 150 ratio formulas; spend effort on the taxonomy and screens instead | — Pending |
+| Direct yfinance + hand-rolled SEC EDGAR client (not OpenBB) | Project research (STACK.md) found OpenBB's 100+-provider abstraction is heavier than needed at ~55 tickers, adds an AGPL dependency, and is harder to debug than two small clients; FinanceToolkit (MIT) is kept for ratio math | — Pending |
+| Multi-sector generalization deferred until after data center ships | Proves the taxonomy/ingestion/screening pattern on one real theme before building an abstraction for themes that don't exist yet; avoids designing the N-theme config shape speculatively | — Pending |
+| Theme momentum rollup over automated discovery | Reuses existing rollup/heatmap machinery instead of building a new news/trends/capex signal pipeline; keeps the owner's judgment in the loop on which sectors to watch | — Pending |
 
 ## Evolution
 
