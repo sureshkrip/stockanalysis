@@ -16,6 +16,7 @@ Owner has a live, deployed data pipeline where every tracked ticker's prices and
 ### Ticker Universe Verification
 - **D-01:** Seed ticker list verified against live market data on 2026-07-19 (web search). Cerebras IPO'd 2026-05-14 under ticker **CBRS** (Nasdaq) — added to `data-center-value-chain-tickers.md` under AI chips/accelerators. NBIS, CRWV, APLD, IREN, SMCI, GDS all confirmed still listed and actively trading — no removals. `data-center-value-chain-tickers.md` is now current as of 2026-07-19; use it as-is when building `sectors.yaml`.
 - **D-02:** No automated ticker-liveness check in Phase 1 ingestion. Verification is a one-time manual pass (done above) that rides along with PROJECT.md's existing "revisit taxonomy roughly monthly" cadence. Per-ticker failure logging (STORE-02) is the safety net between reviews if a ticker goes stale/delists.
+- **D-02a:** General delisting policy — delisted tickers are never auto-removed from `sectors.yaml`. They stay in the taxonomy permanently; ingestion just logs the per-ticker failure each run (per D-02's existing safety net) rather than removing the entry. Owner removes a ticker manually only if/when they choose to during a taxonomy review — not something the pipeline does on its own.
 
 ### Taxonomy Config Shape
 - **D-03:** `sectors.yaml` uses flat sub-sector tagging — no sub-sub-sector nesting. Each ticker gets exactly one primary sub-sector. Straddling cases (e.g., Vertiv spans power/cooling) get a single primary assignment; no schema-level way to express dual membership in v1.

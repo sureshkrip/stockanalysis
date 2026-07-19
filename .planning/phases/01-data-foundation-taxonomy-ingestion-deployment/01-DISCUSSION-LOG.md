@@ -122,3 +122,15 @@
 ## Deferred Ideas
 
 None — discussion stayed within Phase 1 scope.
+
+---
+
+## Update — 2026-07-19: Delisting Policy (D-02a)
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Never auto-remove delisted tickers | Ticker stays in `sectors.yaml` permanently; per-ticker failure logging (D-02/STORE-02) flags it as stale each run | ✓ |
+| One-off exception for a single ticker | Not a general policy, just leave one specific ticker in for now | |
+
+**User's choice:** Never auto-remove delisted tickers (general policy)
+**Notes:** User did not name a specific ticker — this codifies the general rule going forward. Manual removal from the taxonomy remains an owner choice during a taxonomy review, never something the ingestion pipeline does automatically.
