@@ -34,12 +34,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Running the refresh script against the full ~55-ticker universe completes end-to-end even when individual tickers fail, logging each failure rather than halting the overall run
   4. The backend, frontend scaffold, and database run together as a docker-compose stack that deploys to the owner's Coolify VPS via git-push-to-deploy
 
-**Plans**: 5 plans
+**Plans**: 1/5 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Walking skeleton: taxonomy YAML → SQLite → GET /companies → Next.js status page → docker-compose
+- [x] 01-01-PLAN.md — Walking skeleton: taxonomy YAML → SQLite → GET /companies → Next.js status page → docker-compose
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -125,7 +125,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation — Taxonomy, Ingestion & Deployment | 0/5 | Planned | - |
+| 1. Data Foundation — Taxonomy, Ingestion & Deployment | 1/5 | In Progress|  |
 | 2. Company Browser — Sortable Table with Trust Indicators | 0/TBD | Not started | - |
 | 3. Company Detail & Sector Heatmap | 0/TBD | Not started | - |
 | 4. Relative-Value Analysis & Screens | 0/TBD | Not started | - |

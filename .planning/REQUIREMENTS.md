@@ -9,7 +9,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Taxonomy
 
-- [ ] **TAXO-01**: Owner can define and edit the ticker → sub-sector → sub-sub-sector taxonomy in a YAML config file without touching code
+- [x] **TAXO-01**: Owner can define and edit the ticker → sub-sector → sub-sub-sector taxonomy in a YAML config file without touching code
 
 ### Ingestion
 
@@ -18,7 +18,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Storage & Refresh
 
-- [ ] **STORE-01**: Prices and fundamentals persist locally via SQLAlchemy models, running on SQLite in dev with a `DATABASE_URL`-driven Postgres path for production
+- [x] **STORE-01**: Prices and fundamentals persist locally via SQLAlchemy models, running on SQLite in dev with a `DATABASE_URL`-driven Postgres path for production
 - [ ] **STORE-02**: A refresh script updates all tickers and logs per-ticker failures without stopping the overall run
 
 ### Browsing
@@ -46,7 +46,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Deployment
 
-- [ ] **DEPLOY-01**: The full stack (backend, frontend, db) is defined as a docker-compose stack and deploys to the owner's existing Coolify VPS via git-push-to-deploy
+- [x] **DEPLOY-01**: The full stack (backend, frontend, db) is defined as a docker-compose stack and deploys to the owner's existing Coolify VPS via git-push-to-deploy
 
 ## v2 Requirements
 
@@ -90,12 +90,12 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TAXO-01 | Phase 1 | Pending |
+| TAXO-01 | Phase 1 | Complete |
 | INGEST-01 | Phase 1 | Pending |
 | INGEST-02 | Phase 1 | Pending |
-| STORE-01 | Phase 1 | Pending |
+| STORE-01 | Phase 1 | Complete |
 | STORE-02 | Phase 1 | Pending |
-| DEPLOY-01 | Phase 1 | Pending |
+| DEPLOY-01 | Phase 1 | Complete |
 | BROWSE-01 | Phase 2 | Pending |
 | TRUST-01 | Phase 2 | Pending |
 | TRUST-02 | Phase 2 | Pending |
@@ -109,6 +109,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | CONV-02 | Phase 5 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 17 total
 - Mapped to phases: 17 (100%)
 - Unmapped: 0 ✓

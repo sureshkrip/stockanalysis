@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 1
-current_phase_name: Data Foundation — Taxonomy, Ingestion & Deployment
+current_phase: 01
+current_phase_name: data-foundation-taxonomy-ingestion-deployment
 status: executing
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-07-19T15:23:57.232Z"
+stopped_at: Completed 01-01-PLAN.md (Walking Skeleton)
+last_updated: "2026-07-19T17:09:55.422Z"
 last_activity: 2026-07-19
-last_activity_desc: ROADMAP.md created, requirements mapped to 5 phases
+last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 5
+  completed_plans: 1
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-19)
 
 **Core value:** Seeing every company in the data center value chain grouped by sub-sector, with comparable metrics side by side — so relative value within a peer group is obvious at a glance.
-**Current focus:** Phase 1 - Data Foundation — Taxonomy, Ingestion & Deployment
+**Current focus:** Phase 01 — data-foundation-taxonomy-ingestion-deployment
 
 ## Current Position
 
-Phase: 1 of 5 (Data Foundation — Taxonomy, Ingestion & Deployment)
-Plan: 0 of TBD in current phase
+Phase: 01 (data-foundation-taxonomy-ingestion-deployment) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-07-19 — ROADMAP.md created, requirements mapped to 5 phases
+Last activity: 2026-07-19 — Phase 01 execution started
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
@@ -54,6 +54,11 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 01 P01 | 90 | 3 tasks | 50 files |
 
 ## Accumulated Context
 
@@ -65,6 +70,9 @@ Recent decisions affecting current work:
 - Roadmap: docker-compose/Coolify deployment wiring lands in Phase 1 alongside taxonomy + ingestion (not deferred to a later "deploy phase"), per PROJECT.md's explicit docker-compose-from-Phase-0 decision
 - Roadmap: point-in-time fundamentals provenance (filed_date/accession_number) and CIK resolution are Phase 1 concerns, not retrofitted later — research flagged this as the single most expensive-to-retrofit decision in the system
 - Roadmap: multi-sector generalization (MULTI-01/02) and FMP data-source swap (DATA-01) stay deferred to v2 per PROJECT.md — not in this 5-phase v1 roadmap
+- [Phase ?]: Ticker universe is 54 (not the ~56 pre-verification estimate) — data-center-value-chain-tickers.md verified 2026-07-19 lists exactly 54 unique tickers across 10 sub-sectors; sectors.yaml and all tests use the actual verified count
+- [Phase ?]: docker-compose.yml publishes both backend (8000) and frontend (3000) ports locally for smoke testing; Coolify's actual internet exposure is controlled separately via per-service domain assignment in plan 05
+- [Phase ?]: Added a minimal app.ingest.taxonomy container-startup seed entrypoint so docker compose up --build alone proves TAXO-01 end-to-end; superseded by the full app.ingest.refresh orchestrator in plan 02
 
 ### Pending Todos
 
@@ -89,6 +97,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-19T14:49:50.765Z
-Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-data-foundation-taxonomy-ingestion-deployment/01-UI-SPEC.md
+Last session: 2026-07-19T17:09:55.399Z
+Stopped at: Completed 01-01-PLAN.md (Walking Skeleton)
+Resume file: None
