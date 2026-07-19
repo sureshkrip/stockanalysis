@@ -30,7 +30,15 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. A minimal API endpoint or CLI report shows real daily close prices and SEC EDGAR fundamentals (revenue, net income, market cap, 3-5 years of filing history) for every ticker in the taxonomy, each tagged with its source and as-of date
   3. Running the refresh script against the full ~55-ticker universe completes end-to-end even when individual tickers fail, logging each failure rather than halting the overall run
   4. The backend, frontend scaffold, and database run together as a docker-compose stack that deploys to the owner's Coolify VPS via git-push-to-deploy
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Walking skeleton: taxonomy YAML → SQLite → GET /companies → Next.js status page → docker-compose
+- [ ] 01-02-PLAN.md — Price ingestion and the per-ticker-resilient refresh orchestrator
+- [ ] 01-03-PLAN.md — CIK resolution and SEC EDGAR filer-type branching (us-gaap / ifrs-full) extraction
+- [ ] 01-04-PLAN.md — Derived market cap, point-in-time persistence, and full fundamentals history in the API
+- [ ] 01-05-PLAN.md — Coolify deployment, daily scheduled refresh, and operations runbook
+
 **UI hint**: yes
 
 ### Phase 2: Company Browser — Sortable Table with Trust Indicators
@@ -90,7 +98,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation — Taxonomy, Ingestion & Deployment | 0/TBD | Not started | - |
+| 1. Data Foundation — Taxonomy, Ingestion & Deployment | 0/5 | Planned | - |
 | 2. Company Browser — Sortable Table with Trust Indicators | 0/TBD | Not started | - |
 | 3. Company Detail & Sector Heatmap | 0/TBD | Not started | - |
 | 4. Relative-Value Analysis & Screens | 0/TBD | Not started | - |

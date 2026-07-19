@@ -40,15 +40,23 @@ created: 2026-07-19
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| TBD | TBD | TBD | TAXO-01 | — | `sectors.yaml` loads and validates without code changes; malformed YAML raises a clear pydantic error | unit | `pytest tests/test_taxonomy.py::test_load_sectors_yaml -x` | ❌ W0 | ⬜ pending |
-| TBD | TBD | TBD | INGEST-01 | — | Daily close price fetched and persisted per ticker (mocked yfinance) | unit/integration | `pytest tests/test_prices.py::test_fetch_price_success -x` | ❌ W0 | ⬜ pending |
-| TBD | TBD | TBD | INGEST-02 | — | Revenue/net income/market cap extracted correctly for both `us-gaap` and `ifrs-full` filers (recorded TSM/NVDA fixtures) | integration | `pytest tests/test_fundamentals.py::test_filer_type_branching -x` | ❌ W0 | ⬜ pending |
-| TBD | TBD | TBD | STORE-01 | — | SQLAlchemy models persist to SQLite; `DATABASE_URL` swap doesn't require code changes | unit | `pytest tests/test_models.py::test_crud_roundtrip -x` | ❌ W0 | ⬜ pending |
-| TBD | TBD | TBD | STORE-02 | — | Refresh continues past a simulated per-ticker failure and logs it | unit | `pytest tests/test_refresh.py::test_partial_failure_continues -x` | ❌ W0 | ⬜ pending |
-| TBD | TBD | TBD | DEPLOY-01 | — | docker-compose stack builds and both services start; backend responds on its internal port | smoke | `docker compose up --build -d && curl -sf http://localhost:8000/health` | ❌ W0 (compose file itself is the artifact under test) | ⬜ pending |
+| 01-01-T1 | 01-01 | 1 | all | — | Test harness installed; EDGAR fixtures recorded for both taxonomies; end-to-end taxonomy test exists and is RED | scaffold | `uv run pytest tests/test_companies_endpoint.py -x` (expected RED) | ❌ W0 (this task creates it) | ⬜ pending |
+| 01-01-T2 | 01-01 | 1 | TAXO-01 | T-01-01 | `sectors.yaml` loads and validates without code changes; malformed YAML raises a clear pydantic error; safe YAML loader only | unit | `pytest tests/test_taxonomy.py::test_load_sectors_yaml -x` | ❌ W0 | ⬜ pending |
+| 01-01-T2 | 01-01 | 1 | STORE-01 | — | SQLAlchemy models persist to SQLite; point-in-time unique constraint enforced; `DATABASE_URL` swap needs no code change | unit | `pytest tests/test_models.py::test_crud_roundtrip -x` | ❌ W0 | ⬜ pending |
+| 01-01-T3 | 01-01 | 1 | DEPLOY-01 | T-01-03, T-01-05 | docker-compose stack builds and both services start; backend responds on its internal port; status page renders count and degrades to error copy | smoke | `docker compose up --build -d && curl -sf http://localhost:8000/health` | ❌ W0 (compose file is the artifact under test) | ⬜ pending |
+| 01-02-T1 | 01-02 | 2 | INGEST-01 | T-01-06, T-01-07 | Daily close fetched and persisted per ticker (mocked provider); bounded retry with jitter; single-vs-multi response shape normalized | unit/integration | `pytest tests/test_prices.py::test_fetch_price_success -x` | ❌ W0 | ⬜ pending |
+| 01-02-T2 | 01-02 | 2 | STORE-02 | T-01-09 | Refresh continues past a simulated per-ticker failure and logs it; clean runs still write a refresh_log row | unit | `pytest tests/test_refresh.py::test_partial_failure_continues -x` | ❌ W0 | ⬜ pending |
+| 01-02-T3 | 01-02 | 2 | INGEST-01 | — | `GET /companies` returns latest price with source and as-of; null for tickers with none | integration | `pytest tests/test_companies_endpoint.py -x` | ❌ W0 | ⬜ pending |
+| 01-03-T1 | 01-03 | 2 | INGEST-02 | T-01-10, T-01-11, T-01-12 | CIK resolves zero-padded to 10 digits, caches, fails cleanly on unknown tickers; every EDGAR request identified, timed out, paced | unit | `pytest tests/test_cik_resolver.py -x` | ❌ W0 | ⬜ pending |
+| 01-03-T2 | 01-03 | 2 | INGEST-02 | T-01-13 | Revenue/net income extracted correctly for both `us-gaap` and `ifrs-full` filers (recorded NVDA/TSM fixtures); USD-only filtering | integration | `pytest tests/test_fundamentals.py::test_filer_type_branching -x` | ❌ W0 | ⬜ pending |
+| 01-04-T1 | 01-04 | 3 | INGEST-02 | T-01-17 | Market cap derived in exact Decimal from shares × nearest close; null (not zero) when uncomputable | unit | `pytest tests/test_fundamentals.py -x` | ❌ W0 | ⬜ pending |
+| 01-04-T2 | 01-04 | 3 | STORE-01, STORE-02 | T-01-15, T-01-16 | Re-run leaves fundamentals row count unchanged; restatement under a new accession inserts alongside the original; stages fail independently | integration | `pytest tests/test_refresh.py -x` | ❌ W0 | ⬜ pending |
+| 01-04-T3 | 01-04 | 3 | INGEST-02 | T-01-18 | `GET /companies` returns the full multi-year fundamentals history with per-filing provenance, in a stable order | integration | `pytest tests/test_companies_endpoint.py -x` | ❌ W0 | ⬜ pending |
+| 01-05-T1 | 01-05 | 4 | DEPLOY-01 | T-01-21 | Compose is production-shaped (backend unexposed, no committed secrets); runbook documents cron, volume, and User-Agent | smoke | `docker compose config && docker compose up --build -d && curl -sf http://localhost:8000/health` | ❌ W0 | ⬜ pending |
+| 01-05-T2 | 01-05 | 4 | DEPLOY-01 | T-01-20, T-01-22, T-01-23 | Deployed stack live on Coolify; egress to SEC verified from inside the container; data survives redeploy; scheduled task completes | manual (blocking checkpoint) | manual — see Manual-Only Verifications below | n/a | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
-*Task ID/Plan/Wave columns are TBD — the planner has not yet assigned tasks; populate from PLAN.md frontmatter once plans exist for this phase.*
+*Threat Ref column maps to the `<threat_model>` STRIDE registers in the corresponding PLAN.md.*
 
 ---
 
