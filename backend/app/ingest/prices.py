@@ -100,12 +100,18 @@ def fetch_prices(tickers: list[str]) -> list[PriceRow]:
 
     # Batch yf.download() over the full list — not a per-symbol Ticker
     # metadata loop, which cascades 429s across a multi-ticker run.
+    # multi_level_index=False is what actually produces the differing
+    # single-ticker (flat columns) vs multi-ticker (MultiIndex columns)
+    # shapes on the installed yfinance 1.x line — verified live against
+    # 1.5.1, since 1.x's default (multi_level_index=True) returns
+    # MultiIndex columns for a 1-item list too.
     df = yf.download(
         tickers,
         period="5d",
         auto_adjust=False,
         progress=False,
         timeout=10,
+        multi_level_index=False,
     )
 
     return [_extract_row(df, ticker) for ticker in tickers]
