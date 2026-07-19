@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: data-foundation-taxonomy-ingestion-deployment
 status: executing
-stopped_at: Completed 01-01-PLAN.md (Walking Skeleton)
-last_updated: "2026-07-19T17:09:55.422Z"
+stopped_at: Completed 01-02-PLAN.md (Price Ingestion)
+last_updated: "2026-07-19T19:19:41.312Z"
 last_activity: 2026-07-19
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -32,7 +32,7 @@ Plan: 2 of 5
 Status: Ready to execute
 Last activity: 2026-07-19 — Phase 01 execution started
 
-Progress: [██░░░░░░░░] 20%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [██░░░░░░░░] 20%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 90 | 3 tasks | 50 files |
+| Phase 01 P02 | 25 | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [Phase ?]: Ticker universe is 54 (not the ~56 pre-verification estimate) — data-center-value-chain-tickers.md verified 2026-07-19 lists exactly 54 unique tickers across 10 sub-sectors; sectors.yaml and all tests use the actual verified count
 - [Phase ?]: docker-compose.yml publishes both backend (8000) and frontend (3000) ports locally for smoke testing; Coolify's actual internet exposure is controlled separately via per-service domain assignment in plan 05
 - [Phase ?]: Added a minimal app.ingest.taxonomy container-startup seed entrypoint so docker compose up --build alone proves TAXO-01 end-to-end; superseded by the full app.ingest.refresh orchestrator in plan 02
+- [Phase ?]: yf.download() requires multi_level_index=False to actually produce the single-vs-multi-ticker column shape split on yfinance 1.5.1; the library default (multi_level_index=True) returns MultiIndex columns even for a 1-item list
+- [Phase ?]: fetch_price(ticker) delegates to fetch_prices([ticker]) rather than a separate implementation, sharing one normalization path
+- [Phase ?]: python -m app.ingest.refresh accepts an optional taxonomy_path CLI override (defaults to backend/sectors.yaml) for scratch/fixture verification
 
 ### Pending Todos
 
@@ -97,6 +101,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-19T17:09:55.399Z
-Stopped at: Completed 01-01-PLAN.md (Walking Skeleton)
+Last session: 2026-07-19T19:19:41.292Z
+Stopped at: Completed 01-02-PLAN.md (Price Ingestion)
 Resume file: None

@@ -13,13 +13,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Ingestion
 
-- [ ] **INGEST-01**: System pulls daily close price and basic quote data for every ticker in the taxonomy config
+- [x] **INGEST-01**: System pulls daily close price and basic quote data for every ticker in the taxonomy config
 - [ ] **INGEST-02**: System pulls revenue, net income, and market cap for every ticker from SEC EDGAR's company facts API, going back 3-5 years of filings per company (not just the latest quarter — avoids a re-ingestion project when trend charts are added later)
 
 ### Storage & Refresh
 
 - [x] **STORE-01**: Prices and fundamentals persist locally via SQLAlchemy models, running on SQLite in dev with a `DATABASE_URL`-driven Postgres path for production
-- [ ] **STORE-02**: A refresh script updates all tickers and logs per-ticker failures without stopping the overall run
+- [x] **STORE-02**: A refresh script updates all tickers and logs per-ticker failures without stopping the overall run
 
 ### Browsing
 
@@ -91,10 +91,10 @@ Explicitly excluded. Documented to prevent scope creep.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | TAXO-01 | Phase 1 | Complete |
-| INGEST-01 | Phase 1 | Pending |
+| INGEST-01 | Phase 1 | Complete |
 | INGEST-02 | Phase 1 | Pending |
 | STORE-01 | Phase 1 | Complete |
-| STORE-02 | Phase 1 | Pending |
+| STORE-02 | Phase 1 | Complete |
 | DEPLOY-01 | Phase 1 | Complete |
 | BROWSE-01 | Phase 2 | Pending |
 | TRUST-01 | Phase 2 | Pending |

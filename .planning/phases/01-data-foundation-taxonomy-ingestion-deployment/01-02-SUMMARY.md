@@ -231,3 +231,7 @@ None - no new external service configuration required. `EDGAR_USER_AGENT` remain
 ---
 *Phase: 01-data-foundation-taxonomy-ingestion-deployment*
 *Completed: 2026-07-19*
+
+## Self-Check: PASSED
+
+All 6 claimed files verified present on disk. All 7 claimed commit hashes (`2ee953b`, `1f75d4a`, `82d1d22`, `0504b04`, `965f087`, `85f735a`, `3b2e62f`) verified present in git history.
