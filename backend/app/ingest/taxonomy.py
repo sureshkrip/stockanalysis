@@ -59,3 +59,29 @@ def sync_taxonomy(session: Session, config: TaxonomyConfig) -> None:
                 row.name = entry.name
             if row.sub_sector != entry.sub_sector:
                 row.sub_sector = entry.sub_sector
+
+
+def _main() -> None:
+    """Container-startup entrypoint: sync backend/sectors.yaml into the DB.
+
+    Wave-0-scoped stand-in for the full `app.ingest.refresh` orchestrator
+    (prices + fundamentals + failure log) that plans 02-04 build out. Run
+    via `python -m app.ingest.taxonomy` from the Dockerfile CMD, after the
+    Alembic migration and before uvicorn starts, so `docker compose up
+    --build` alone proves TAXO-01's owner-editable YAML end to end.
+    """
+    from app.db import get_session_factory
+
+    sectors_yaml = Path(__file__).parent.parent.parent / "sectors.yaml"
+    config = load_taxonomy(sectors_yaml)
+
+    session_factory = get_session_factory()
+    with session_factory() as session:
+        sync_taxonomy(session, config)
+        session.commit()
+
+    print(f"Synced {len(config.companies)} tickers from {sectors_yaml}")
+
+
+if __name__ == "__main__":
+    _main()

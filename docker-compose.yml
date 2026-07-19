@@ -1,0 +1,31 @@
+# Two-service SQLite MVP shape — no `db` container (RESEARCH.md, PROJECT.md
+# SQLite-first decision). Coolify auto-creates a shared network per compose
+# stack, so no explicit `networks:` block is declared.
+#
+# Backend's port is published here for local `docker compose up` smoke
+# testing/curl access (01-VALIDATION.md's automated checks assume
+# localhost:8000 is reachable). In Coolify, internet exposure is controlled
+# separately by assigning a domain to a service in the Coolify UI — publish
+# a port here does not itself create a public domain — so only `frontend`
+# should be given a domain when this stack is deployed (plan 05).
+services:
+  backend:
+    build: ./backend
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-sqlite:////data/app.db}
+      - EDGAR_USER_AGENT=${EDGAR_USER_AGENT}
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    environment:
+      - BACKEND_URL=http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
