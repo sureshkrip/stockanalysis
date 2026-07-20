@@ -26,9 +26,14 @@ services:
       - DATABASE_URL=${DATABASE_URL:-sqlite:////data/app.db}
       - EDGAR_USER_AGENT=${EDGAR_USER_AGENT}
     volumes:
-      - type: bind
-        source: ./data
-        target: /data
+      # Named volume, NOT a bind mount to ./data. A relative bind mount
+      # resolves inside Coolify's git clone directory, which is replaced on
+      # every redeploy — the SQLite file would silently vanish and
+      # GET /companies would return zero rows with no error, looking exactly
+      # like an ingest that never ran (docs/deployment.md §4). A named volume
+      # is host-managed and survives redeploys, and is what Coolify's backend
+      # service -> Storages panel binds to at /data.
+      - app_data:/data
 
   frontend:
     build: ./frontend
@@ -36,3 +41,6 @@ services:
       - BACKEND_URL=http://backend:8000
     depends_on:
       - backend
+
+volumes:
+  app_data:
